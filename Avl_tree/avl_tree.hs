@@ -1,0 +1,1 @@
+data AVL_Tree l r  = Empty | Node l r Int (AVL_Tree l r) (AVL_Tree l r) deriving(Show, Eq)
