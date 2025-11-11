@@ -1,1 +1,11 @@
-data AVL_Tree l r  = Empty | Node l r Int (AVL_Tree l r) (AVL_Tree l r) deriving(Show, Eq)
+import Text.PrettyPrint
+
+data AVL_Tree t  = Empty | Node t (AVL_Tree t) (AVL_Tree t)
+    deriving(Show, Eq)
+
+prettyTree :: Show t => AVL_Tree t -> Doc
+prettyTree Empty = text "Empty"
+prettyTree (Node t l r) = text (show t)
+    $+$ nest 1 (prettyTree l)
+    $+$ nest 1 (prettyTree r)
+
