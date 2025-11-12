@@ -5,6 +5,8 @@ import Text.PrettyPrint
 data AVL_Tree t  = Empty | Node t (AVL_Tree t) (AVL_Tree t)
     deriving(Show, Eq, Ord)
 
+-- when calling, avl tree MUST be in brackets
+-- e.g. print_Tree (Node 2 empty empty)
 print_Tree :: Show t => AVL_Tree t -> Doc
 print_Tree Empty = text "Empty"
 print_Tree (Node t l r) = text (show t)
