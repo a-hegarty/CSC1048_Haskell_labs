@@ -13,3 +13,9 @@ print_Tree (Node t l r _) = text (show t)
     $+$ nest 1 (print_Tree l)
     $+$ nest 1 (print_Tree r)
 
+insert_Node :: (Ord n) => n -> AVL_Tree n -> AVL_Tree n
+insert_Node n Empty = Node n Empty Empty 1
+insert_Node n (Node t left right height)
+    |n < t = balance(Node t (insert_Node n left) right (height + 1))
+    |n > t = balance(Node t left (insert_Node n right) (height + 1))
+    |otherwise = Node n left right 1
