@@ -27,6 +27,7 @@ insert_Node n (Node t left right height)
     |n > t = (Node t left (insert_Node n right) (height + 1))
     |otherwise = Node n left right 1
 
+--function returns the balance factor of the tree input
 balance :: AVL_Tree t -> Int
 balance Empty = 0
 balance (Node _ Empty Empty _) = 0
