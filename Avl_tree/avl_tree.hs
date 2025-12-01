@@ -42,4 +42,12 @@ is_Balanaced (Node t l r _)
     |not (is_Balanaced l) = False
     |not (is_Balanaced r) = False
     |abs ((height l) - (height r)) > 1 = False
-    | otherwise = True
+    |otherwise = True
+
+left_Tree :: AVL_Tree t -> AVL_Tree t
+left_Tree Empty = Empty
+left_Tree (Node _ l _ _) = l
+
+right_Tree :: AVL_Tree t -> AVL_Tree t
+right_Tree Empty = Empty
+right_Tree (Node _ _ r _) = r
