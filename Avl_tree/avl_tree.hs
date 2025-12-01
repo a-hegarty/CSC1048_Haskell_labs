@@ -1,3 +1,5 @@
+-- Aoibhe Hegarty
+-- 23487084
 import Text.PrettyPrint
 
 -- AVL trees take the form Node Root Left right
@@ -5,18 +7,18 @@ import Text.PrettyPrint
 data AVL_Tree t  = Empty | Node t (AVL_Tree t) (AVL_Tree t)
     deriving(Show, Eq, Ord)
 
--- when calling, avl tree MUST be in brackets
+-- when calling all functions, avl tree MUST be in brackets
 -- e.g. print_Tree (Node 2 empty empty 0)
 print_Tree :: Show t => AVL_Tree t -> Doc
 print_Tree Empty = text "Empty"
-print_Tree (Node t l r) = text (show t)
-    $+$ nest 1 (print_Tree l)
-    $+$ nest 1 (print_Tree r)
+print_Tree (Node t l r) = 
+    text (show t)--print root node
+    $+$ nest 1 (print_Tree l) -- print left subtree (all values less than root node)
+    $+$ nest 1 (print_Tree r) -- print right subtree (all values greater than root node)
 
 --function outputs the height of a given avl tree
 height :: AVL_Tree t -> Int
 height Empty = 0
-height (Node _ Empty Empty) = 0
 height (Node t l r) = 1 + max(height l) (height r)
 
 --function inserts a node into the avl tree using correct balancing
@@ -24,7 +26,8 @@ insert_Node :: (Ord n, Num n) => n -> AVL_Tree n -> AVL_Tree n
 insert_Node n Empty = (Node n Empty Empty)
 insert_Node n (Node t left right)
     | n > t = rotate((Node t left (insert_Node n right)))
-    | otherwise = rotate((Node t (insert_Node n left) right))
+    | n < t = rotate((Node t (insert_Node n left) right))
+    | otherwise = (Node t left right) -- if n == t, return tree t
 
 --function returns a bool of whether the AVL tree is balanced or not
 is_Balanaced :: (Ord n, Num n) => AVL_Tree n -> Bool
