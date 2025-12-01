@@ -1,7 +1,7 @@
 import Text.PrettyPrint
 
 -- AVL trees take the form Node Root Left right
--- tree1/2\3\4 will take the form (Node 2 (Node 1 Empty Empty 1) (Node 3 Empty (Node 4 Empty Empty 2) 1) 0)
+-- tree 1/2\3\4 will take the form; (Node 2 (Node 1 Empty Empty 1) (Node 3 Empty (Node 4 Empty Empty 2) 1) 0)
 data AVL_Tree t  = Empty | Node t (AVL_Tree t) (AVL_Tree t) Int
     deriving(Show, Eq, Ord)
 
@@ -20,12 +20,11 @@ height (Node _ Empty Empty _) = 0
 height (Node t l r h) = 1 + max(height l) (height r)
 
 --function inserts a node into the avl tree using correct balancing
-insert_Node :: (Ord n) => n -> AVL_Tree n -> AVL_Tree n
+insert_Node :: (Ord n, Num n) => n -> AVL_Tree n -> AVL_Tree n
 insert_Node n Empty = Node n Empty Empty 1
 insert_Node n (Node t left right height)
-    |n < t = (Node t (insert_Node n left) right (height + 1))
-    |n > t = (Node t left (insert_Node n right) (height + 1))
-    |otherwise = Node n left right 1
+    | n > t = rotate((Node t left (insert_Node n right) height))
+    | otherwise = rotate((Node t (insert_Node n left) right height))
 
 --function returns the balance factor of the tree input
 balance :: AVL_Tree t -> Int
@@ -52,8 +51,20 @@ right_Tree :: AVL_Tree t -> AVL_Tree t
 right_Tree Empty = Empty
 right_Tree (Node _ _ r _) = r
 
-ins :: (Ord a, Num a) => a -> AVL_Tree a -> AVL_Tree a
-ins a Empty = Node a Empty Empty 0
-ins a (Node t l r h)
-    | a > t = rotate((Node t l (ins a r) h))
-    | otherwise = rotate((Node t (ins a l) r h))
+root :: (Ord n, Num n) => AVL_Tree n -> n
+root Empty = 0
+root (Node t l r h) = t
+
+rotate :: (Ord a, Num a) => AVL_Tree a -> AVL_Tree a
+rotate Empty = Empty
+rotate (Node t l r h)
+    | not (is_Balanaced r) = (Node t l (rotate r) h) 
+    | (height l) + 1 < (height r) && (height (left_Tree r)) < (height (right_Tree r)) =
+        (Node (root r) (Node t l (left_Tree r) h) (right_Tree r) h) -- right-right rotation
+    | (height r) + 1 < (height l) && (height (left_Tree l)) < (height (right_Tree l)) =
+        (Node (root l) (left_Tree l) (Node t (right_Tree l) r h) h) -- left-left rotation
+    | (height l) + 1 < (height r) && (height (left_Tree r)) > (height (right_Tree r)) =
+        (Node (root (left_Tree r)) (Node t l (left_Tree(left_Tree r)) h) (Node (root r) (right_Tree(left_Tree r)) (right_Tree r) h) h) -- right-left rotation
+    | (height r) + 1 < (height l) && (height (right_Tree l)) > (height (left_Tree l)) =
+        (Node (root(right_Tree l)) (Node (root l) (left_Tree l) (left_Tree(right_Tree l)) h) (Node t (right_Tree(right_Tree l)) r h) h) -- left-right rotation
+    | otherwise = (Node t l r h) -- return original tree if no rotations apply
