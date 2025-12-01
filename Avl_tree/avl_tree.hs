@@ -16,7 +16,7 @@ print_Tree (Node t l r _) = text (show t)
 --function outputs the height of a given avl tree
 height :: AVL_Tree t -> Int
 height Empty = 0
-height (Node _ Empty Empty) = 0
+height (Node _ Empty Empty _) = 0
 height (Node t l r h) = 1 + max(height l) (height r)
 
 --function inserts a node into the avl tree using correct balancing
@@ -26,3 +26,10 @@ insert_Node n (Node t left right height)
     |n < t = (Node t (insert_Node n left) right (height + 1))
     |n > t = (Node t left (insert_Node n right) (height + 1))
     |otherwise = Node n left right 1
+
+balance :: AVL_Tree t -> Int
+balance Empty = 0
+balance (Node _ Empty Empty _) = 0
+balance (Node _ l Empty _) = 1 + (height l)
+balance (Node _ Empty r _) = 1 + (height r)
+balance (Node _ l r _) = abs ((height l) - (height r))
