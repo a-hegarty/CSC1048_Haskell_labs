@@ -1,7 +1,7 @@
 import Text.PrettyPrint
 
 -- AVL trees take the form Node Root Left right
--- tree1/2\3\4 will take the form Node 2 (Node 1 Empty Empty 1) (Node 3 Empty (Node 4 Empty Empty 2) 1) 0
+-- tree1/2\3\4 will take the form (Node 2 (Node 1 Empty Empty 1) (Node 3 Empty (Node 4 Empty Empty 2) 1) 0)
 data AVL_Tree t  = Empty | Node t (AVL_Tree t) (AVL_Tree t) Int
     deriving(Show, Eq, Ord)
 
@@ -34,3 +34,12 @@ balance (Node _ Empty Empty _) = 0
 balance (Node _ l Empty _) = 1 + (height l)
 balance (Node _ Empty r _) = 1 + (height r)
 balance (Node _ l r _) = abs ((height l) - (height r))
+
+--function returns a bool of whether the AVL tree is balanced or not
+is_Balanaced :: (Ord n, Num n) => AVL_Tree n -> Bool
+is_Balanaced Empty = True
+is_Balanaced (Node t l r _)
+    |not (is_Balanaced l) = False
+    |not (is_Balanaced r) = False
+    |abs ((height l) - (height r)) > 1 = False
+    | otherwise = True
