@@ -51,3 +51,9 @@ left_Tree (Node _ l _ _) = l
 right_Tree :: AVL_Tree t -> AVL_Tree t
 right_Tree Empty = Empty
 right_Tree (Node _ _ r _) = r
+
+ins :: (Ord a, Num a) => a -> AVL_Tree a -> AVL_Tree a
+ins a Empty = Node a Empty Empty 0
+ins a (Node t l r h)
+    | a > t = rotate((Node t l (ins a r) h))
+    | otherwise = rotate((Node t (ins a l) r h))
